@@ -2,16 +2,16 @@ pragma solidity 0.5.16;
 
 contract Compraventa {
 
-    enum State {
+    enum Estado {
         CONTRATO_CREADO,
-        VENDEDOR_ENVIO_FONDOS, 
+        VENDEDOR_ENVIO_FONDOS,
         COMPRADOR_ENVIO_FONDOS,
         FONDOS_LIBERADOS
     }
     uint constant FACTOR_DEPOSITO_VENDEDOR = 1;
     uint constant FACTOR_DEPOSITO_COMPRADOR = 1;
 
-    State estado;
+    Estado estado;
     uint precio;
     uint depositoVendedor;
     uint depositoComprador;
@@ -22,27 +22,27 @@ contract Compraventa {
         precio = _precio;
         depositoVendedor = _precio * FACTOR_DEPOSITO_VENDEDOR;
         depositoComprador = _precio * FACTOR_DEPOSITO_COMPRADOR;
-        estado = State.CONTRATO_CREADO;
+        estado = Estado.CONTRATO_CREADO;
     }
 
     function enviarFondosVendedor () public payable {
-        require(estado == State.CONTRATO_CREADO, "estado incorrecto");
+        require(estado == Estado.CONTRATO_CREADO, "estado incorrecto");
         require(msg.value == depositoVendedor, "fondos incorrectos");
         vendedor = msg.sender;
-        estado = State.VENDEDOR_ENVIO_FONDOS;
+        estado = Estado.VENDEDOR_ENVIO_FONDOS;
     }
 
     function enviarFondosComprador () public payable {
-        require(estado == State.VENDEDOR_ENVIO_FONDOS, "estado incorrecto");
+        require(estado == Estado.VENDEDOR_ENVIO_FONDOS, "estado incorrecto");
         require(msg.value == depositoComprador + precio, "fondos incorrectos");
         comprador = msg.sender;
-        estado = State.COMPRADOR_ENVIO_FONDOS;
+        estado = Estado.COMPRADOR_ENVIO_FONDOS;
     }
 
     function liberarFondos () public {
-        require(estado == State.COMPRADOR_ENVIO_FONDOS, "estado incorrecto");
+        require(estado == Estado.COMPRADOR_ENVIO_FONDOS, "estado incorrecto");
         require(msg.sender == comprador, "emisor incorrecto");
-        estado = State.FONDOS_LIBERADOS;
+        estado = Estado.FONDOS_LIBERADOS;
         vendedor.call.value(depositoVendedor + precio)("");
         comprador.call.value(depositoComprador)("");
     }
