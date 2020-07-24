@@ -11,7 +11,7 @@ contract Compraventa {
     uint constant FACTOR_DEPOSITO_VENDEDOR = 1;
     uint constant FACTOR_DEPOSITO_COMPRADOR = 1;
 
-    Estado estado;
+    Estado public estado;
     uint precio;
     uint depositoVendedor;
     uint depositoComprador;
