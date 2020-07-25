@@ -25,23 +25,46 @@ contract Compraventa {
         estado = Estado.CONTRATO_CREADO;
     }
 
-    function enviarFondosVendedor () public payable {
-        require(estado == Estado.CONTRATO_CREADO, "estado incorrecto");
-        require(msg.value == depositoVendedor, "fondos incorrectos");
+    modifier estadoValido(Estado _estadoReq) {
+        require(estado == _estadoReq, 'Estado incorrecto');
+        _;
+    }
+
+    modifier fondoCorrecto(uint _tipoDeposito) {
+        require(msg.value == _tipoDeposito, 'Fondos incorrectos');
+        _;
+    }
+
+    modifier onlyComprador {
+        require(msg.sender == comprador, 'Emisor incorrecto');
+        _;
+    }
+
+    function enviarFondosVendedor() 
+        public
+        payable
+        estadoValido(Estado.CONTRATO_CREADO)
+        fondoCorrecto(depositoVendedor)
+    {
         vendedor = msg.sender;
         estado = Estado.VENDEDOR_ENVIO_FONDOS;
     }
 
-    function enviarFondosComprador () public payable {
-        require(estado == Estado.VENDEDOR_ENVIO_FONDOS, "estado incorrecto");
-        require(msg.value == depositoComprador + precio, "fondos incorrectos");
+    function enviarFondosComprador() 
+        public
+        payable
+        estadoValido(Estado.VENDEDOR_ENVIO_FONDOS)
+        fondoCorrecto(depositoComprador + precio)
+    {
         comprador = msg.sender;
         estado = Estado.COMPRADOR_ENVIO_FONDOS;
     }
 
-    function liberarFondos () public {
-        require(estado == Estado.COMPRADOR_ENVIO_FONDOS, "estado incorrecto");
-        require(msg.sender == comprador, "emisor incorrecto");
+    function liberarFondos()
+        public
+        estadoValido(Estado.COMPRADOR_ENVIO_FONDOS)
+        onlyComprador
+    {
         estado = Estado.FONDOS_LIBERADOS;
         vendedor.call.value(depositoVendedor + precio)("");
         comprador.call.value(depositoComprador)("");

@@ -80,7 +80,7 @@ contract('Compraventa', accounts => {
         instancia.liberarFondos({
           from: vendedor,
         }),
-        'emisor incorrecto'
+        'Emisor incorrecto'
       );
 
     });
