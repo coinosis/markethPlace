@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <body>
+    <h1>MarkethPlace</h1>
+    <div>
+      <h2>Conectar con Ethereum</h2>
+      <button onclick="window.conectar()">conectar</button>
+      dirección: <span id="infoCuenta"></span>
+    </div>
+    <div>
+      <h2>Desplegar un contrato nuevo</h2>
+      precio: <input id="campoPrecio"/> ETH
+      <button onclick="window.desplegar()">desplegar</button>
+      <br/>
+      dirección: <span id="infoContrato"></span>
+    </div>
+    <div>
+      <h2>Interactuar con un contrato</h2>
+      dirección: <input id="campoContrato"/>
+      <button onclick="window.cargar()">cargar</button>
+      <br/>
+      estado: <span id="infoEstado"></span>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
