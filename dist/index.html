@@ -19,7 +19,20 @@
       dirección: <input id="campoContrato"/>
       <button onclick="window.cargar()">cargar</button>
       <br/>
-      estado: <span id="infoEstado"></span>
+      <b>balance: <span id="infoBalance"></span> ETH<br/>
+        estado: <span id="infoEstado"></span></b><br/><br/>
+      precio: <span id="infoPrecio"></span> ETH<br/>
+      vendedor: <span id="infoVendedor"></span><br/>
+      comprador: <span id="infoComprador"></span><br/>
+      <button onclick="window.enviarFondosVendedor()">
+        registrar vendedor
+      </button>
+      <button onclick="window.enviarFondosComprador()">
+        comprar
+      </button>
+      <button onclick="window.liberarFondos()">
+        liberar fondos
+      </button>
     </div>
     <script src="main.js"></script>
   </body>

@@ -12,11 +12,13 @@ contract Compraventa {
     uint constant FACTOR_DEPOSITO_COMPRADOR = 1;
 
     Estado public estado;
-    uint precio;
-    uint depositoVendedor;
-    uint depositoComprador;
-    address vendedor;
-    address comprador;
+    uint public precio;
+    uint public depositoVendedor;
+    uint public depositoComprador;
+    address public vendedor;
+    address public comprador;
+
+    event CambioEstado ();
 
     constructor (uint _precio) public {
         precio = _precio;
@@ -40,7 +42,7 @@ contract Compraventa {
         _;
     }
 
-    function enviarFondosVendedor() 
+    function enviarFondosVendedor()
         public
         payable
         estadoValido(Estado.CONTRATO_CREADO)
@@ -48,9 +50,10 @@ contract Compraventa {
     {
         vendedor = msg.sender;
         estado = Estado.VENDEDOR_ENVIO_FONDOS;
+        emit CambioEstado();
     }
 
-    function enviarFondosComprador() 
+    function enviarFondosComprador()
         public
         payable
         estadoValido(Estado.VENDEDOR_ENVIO_FONDOS)
@@ -58,6 +61,7 @@ contract Compraventa {
     {
         comprador = msg.sender;
         estado = Estado.COMPRADOR_ENVIO_FONDOS;
+        emit CambioEstado();
     }
 
     function liberarFondos()
@@ -68,6 +72,7 @@ contract Compraventa {
         estado = Estado.FONDOS_LIBERADOS;
         vendedor.call.value(depositoVendedor + precio)("");
         comprador.call.value(depositoComprador)("");
+        emit CambioEstado();
     }
 
 }

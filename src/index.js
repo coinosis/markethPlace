@@ -9,6 +9,12 @@ const campoPrecio = document.getElementById('campoPrecio');
 const infoContrato = document.getElementById('infoContrato');
 const campoContrato = document.getElementById('campoContrato');
 const infoEstado = document.getElementById('infoEstado');
+const infoBalance = document.getElementById('infoBalance');
+const infoPrecio = document.getElementById('infoPrecio');
+const infoVendedor = document.getElementById('infoVendedor');
+const infoComprador = document.getElementById('infoComprador');
+let instancia;
+let cuentas;
 
 const estado = {
   0: 'CONTRATO_CREADO',
@@ -18,7 +24,7 @@ const estado = {
 }
 
 window.conectar = async () => {
-  const cuentas = await web3.eth.requestAccounts();
+  cuentas = await web3.eth.requestAccounts();
   console.log(cuentas);
   infoCuenta.innerHTML = cuentas[0];
 }
@@ -38,11 +44,52 @@ window.desplegar = async () => {
 
 window.cargar = async () => {
   const direccion = campoContrato.value;
-  const instancia = new web3.eth.Contract(
+  instancia = new web3.eth.Contract(
     jsonContrato.abi,
     direccion
   );
+  instancia.events.CambioEstado().on('data', () => {
+    window.cargar();
+  });
   infoEstado.innerHTML = estado[
     await instancia.methods.estado().call()
   ];
+  const precioWei = await instancia.methods.precio().call();
+  const precioETH = web3.utils.fromWei(precioWei);
+  infoPrecio.innerHTML = precioETH;
+  const direccionComprador = await instancia.methods.comprador().call();
+  if (Number(direccionComprador) == 0) {
+    infoComprador.innerHTML = '(sin comprador)';
+  } else {
+    infoComprador.innerHTML = direccionComprador;
+  }
+  const direccionVendedor = await instancia.methods.vendedor().call();
+  if (Number(direccionVendedor) == 0) {
+    infoVendedor.innerHTML = '(sin vendedor)';
+  } else {
+    infoVendedor.innerHTML = direccionVendedor;
+  }
+  infoBalance.innerHTML = web3.utils.fromWei(
+    await web3.eth.getBalance(instancia._address)
+  );
 }
+
+window.enviarFondosVendedor = async () => {
+  const precioWei = await instancia.methods.precio().call();
+  await instancia.methods.enviarFondosVendedor().send({
+    from: cuentas[0],
+    value: precioWei,
+  });
+  window.cargar();
+}
+
+window.enviarFondosComprador = async () => {
+  const precioWei = BigInt(await instancia.methods.precio().call());
+  await instancia.methods.enviarFondosComprador().send({
+    from: cuentas[0],
+    value: String(2 * precioWei),
+  });
+  window.cargar();
+}
+
+window.liberarFondos = async () => {}
