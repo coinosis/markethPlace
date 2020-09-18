@@ -1,39 +1,7 @@
 <!doctype html>
 <html>
   <body>
-    <h1>MarkethPlace</h1>
-    <div>
-      <h2>Conectar con Ethereum</h2>
-      <button onclick="window.conectar()">conectar</button>
-      dirección: <span id="infoCuenta"></span>
-    </div>
-    <div>
-      <h2>Desplegar un contrato nuevo</h2>
-      precio: <input id="campoPrecio"/> ETH
-      <button onclick="window.desplegar()">desplegar</button>
-      <br/>
-      dirección: <span id="infoContrato"></span>
-    </div>
-    <div>
-      <h2>Interactuar con un contrato</h2>
-      dirección: <input id="campoContrato"/>
-      <button onclick="window.cargar()">cargar</button>
-      <br/>
-      <b>balance: <span id="infoBalance"></span> ETH<br/>
-        estado: <span id="infoEstado"></span></b><br/><br/>
-      precio: <span id="infoPrecio"></span> ETH<br/>
-      vendedor: <span id="infoVendedor"></span><br/>
-      comprador: <span id="infoComprador"></span><br/>
-      <button onclick="window.enviarFondosVendedor()">
-        registrar vendedor
-      </button>
-      <button onclick="window.enviarFondosComprador()">
-        comprar
-      </button>
-      <button onclick="window.liberarFondos()">
-        liberar fondos
-      </button>
-    </div>
+    <div id="markethPlace">
     <script src="main.js"></script>
   </body>
 </html>
