@@ -2,8 +2,10 @@
 
 ## Dependencias de sistema
 
-`npm       [v 12.16.1]`
-`ganache   [v 6.9.1] (o superiro)` 
+```
+npm       [v 12.16.1]
+ganache   [v 6.9.1] (o superiro)
+``` 
 
 ## Configuración
 Generar un mnemónico para el proyecto.
