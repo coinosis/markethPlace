@@ -9,6 +9,7 @@ const MarkethPlace = () => {
   const [ address, setAddress, ] = useState();
   const [ box, setBox, ] = useState();
   const [ loading, setLoading, ] = useState();
+  const [ profile, setProfile, ] = useState();
 
   useEffect(() => {
     setWeb3(new Web3(Web3.givenProvider));
@@ -29,6 +30,16 @@ const MarkethPlace = () => {
     getBox();
   }, [ setBox, address, setLoading, ]);
 
+  useEffect(() => {
+    if (!box) return;
+    const getProfile = async () => {
+      setProfile(await box.public.all());
+    }
+    getProfile();
+  }, [ box, setProfile, ]);
+
+  console.log(JSON.stringify(profile, null, 2));
+
   return (
     <div
       css={`
@@ -43,6 +54,18 @@ const MarkethPlace = () => {
         </MetaMaskButton>
       ) }
       { loading && <Loader/> }
+      { profile && (
+        <div>
+          <div>
+            { profile.name } { profile.emoji }
+          </div>
+          <div>
+            { profile.description }
+          </div>
+          <div>
+          </div>
+        </div>
+      ) }
     </div>
   );
 }
