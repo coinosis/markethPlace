@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState, } from 'react';
 import Box from '3box';
 import Web3 from 'web3';
-import { MetaMaskButton, Loader, } from 'rimble-ui';
+import { Avatar, MetaMaskButton, Loader, Card, Text, Icon} from 'rimble-ui';
+import styled from 'styled-components';
 
 const MarkethPlace = () => {
 
@@ -40,25 +41,52 @@ const MarkethPlace = () => {
 
   console.log(JSON.stringify(profile, null, 2));
 
+  const InfoFrom3box = styled.div`
+    color: #558891;
+    font-size:26px;
+  `;
+
+  const CenterLoader = styled.div`
+    display:flex;
+    justify-content:center;
+  `;
+
   return (
-    <div
-      css={`
-        display: flex;
-      `}
-    >
+    <div>
+
+      <Card width={"auto"} maxWidth={"420px"} mx={"auto"}>
+        <Text
+          caps
+          fontSize={0}
+          fontWeight={4}
+          mb={3}
+          display={"flex"}
+          alignItems={"center"}
+        >
+        <Icon name={"AccountBox"} mr={20} />
+          Bievenido a markethPlace:
+      </Text>
       { !address && (
-        <MetaMaskButton
+        <MetaMaskButton.Outline
           onClick={ connect }
         >
-          Conéctate con Metamask
-        </MetaMaskButton>
+          Usar Metamask
+        </MetaMaskButton.Outline>
       ) }
-      { loading && <Loader/> }
+
+      <CenterLoader>  
+        { loading && <Loader color="black" display={"flex"}/> }
+      </CenterLoader>
       { profile && (
         <div>
-          <div>
+          <Avatar
+            src={"https://ipfs.infura.io/ipfs/"+profile.image[0].contentUrl["/"]}
+            size="100px"
+          />
+          <InfoFrom3box>
+            <Icon name={"AccountCircle"} mr={2} />
             { profile.name } { profile.emoji }
-          </div>
+          </InfoFrom3box>
           <div>
             { profile.description }
           </div>
@@ -66,6 +94,7 @@ const MarkethPlace = () => {
           </div>
         </div>
       ) }
+      </Card>
     </div>
   );
 }
