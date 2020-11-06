@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState, } from 'react';
 import Box from '3box';
 import Web3 from 'web3';
-import { Avatar, MetaMaskButton, Loader, Card, Text, Icon} from 'rimble-ui';
+import { Button, Input, Avatar, MetaMaskButton, Loader, Card, Text, Icon} from 'rimble-ui';
 import styled from 'styled-components';
-
+import JSONContract from "../build/contracts/Compraventa.json";
 const MarkethPlace = () => {
 
   const [ web3, setWeb3, ] = useState();
@@ -11,6 +11,7 @@ const MarkethPlace = () => {
   const [ box, setBox, ] = useState();
   const [ loading, setLoading, ] = useState();
   const [ profile, setProfile, ] = useState();
+  const [ price, setPrice ] = useState()
 
   useEffect(() => {
     setWeb3(new Web3(Web3.givenProvider));
@@ -39,6 +40,7 @@ const MarkethPlace = () => {
     getProfile();
   }, [ box, setProfile, ]);
 
+
   console.log(JSON.stringify(profile, null, 2));
 
   const InfoFrom3box = styled.div`
@@ -50,6 +52,18 @@ const MarkethPlace = () => {
     display:flex;
     justify-content:center;
   `;
+
+  const agregarProducto = useCallback(() => {
+    let contrato = new web3.eth.Contract(JSONContract.abi);
+    contrato.deploy({
+      'data': JSONContract.bytecode,
+      'arguments': [price]
+    }).send({
+      'from': address
+    })
+  }, [web3, price, address]);
+
+  console.log(price);
 
   return (
     <div>
@@ -77,7 +91,7 @@ const MarkethPlace = () => {
       <CenterLoader>  
         { loading && <Loader color="black" display={"flex"}/> }
       </CenterLoader>
-      { profile && (
+      { profile && profile.image && (
         <div>
           <Avatar
             src={"https://ipfs.infura.io/ipfs/"+profile.image[0].contentUrl["/"]}
@@ -95,6 +109,16 @@ const MarkethPlace = () => {
         </div>
       ) }
       </Card>
+      { address && (
+        <div>
+          <Card width={"auto"} maxWidth={"420px"} mx={"auto"}>
+          <p>Ingresa el precio:</p>
+          <Input value={price} onChange={(e) => {setPrice(e.target.value)}} type="text" required={true} placeholder="Ingresa el precio" />
+          <Button.Outline onClick={agregarProducto}>Agregar</Button.Outline>
+        </Card>
+        
+        </div>
+      ) }
     </div>
   );
 }
