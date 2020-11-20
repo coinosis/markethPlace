@@ -11,7 +11,9 @@ const MarkethPlace = () => {
   const [ box, setBox, ] = useState();
   const [ loading, setLoading, ] = useState();
   const [ profile, setProfile, ] = useState();
-  const [ price, setPrice ] = useState()
+  const [ price, setPrice ] = useState();
+  const [ contractAddress, setContractAddress ] = useState();
+
 
   useEffect(() => {
     setWeb3(new Web3(Web3.givenProvider));
@@ -41,7 +43,6 @@ const MarkethPlace = () => {
   }, [ box, setProfile, ]);
 
 
-  console.log(JSON.stringify(profile, null, 2));
 
   const InfoFrom3box = styled.div`
     color: #558891;
@@ -53,17 +54,17 @@ const MarkethPlace = () => {
     justify-content:center;
   `;
 
-  const agregarProducto = useCallback(() => {
+  const agregarProducto = useCallback(async () => {
     let contrato = new web3.eth.Contract(JSONContract.abi);
-    contrato.deploy({
+    var deployment = await contrato.deploy({
       'data': JSONContract.bytecode,
       'arguments': [price]
     }).send({
       'from': address
-    })
-  }, [web3, price, address]);
+    });
+    setContractAddress(deployment._address);
+  }, [web3, price, address, setContractAddress]);
 
-  console.log(price);
 
   return (
     <div>
@@ -115,6 +116,11 @@ const MarkethPlace = () => {
           <p>Ingresa el precio:</p>
           <Input value={price} onChange={(e) => {setPrice(e.target.value)}} type="text" required={true} placeholder="Ingresa el precio" />
           <Button.Outline onClick={agregarProducto}>Agregar</Button.Outline>
+          { contractAddress &&
+            <Card width={"auto"} maxWidth={"120px"} mx={"auto"}>
+              <p>El contrato ha sido desplegado en: {contractAddress}</p>
+            </Card>
+          }
         </Card>
         
         </div>
