@@ -1,5 +1,6 @@
-const Compraventa = artifacts.require('Compraventa');
 const truffleAssert = require('truffle-assertions');
+
+const Compraventa = artifacts.require('Compraventa');
 
 contract('Compraventa', accounts => {
 
