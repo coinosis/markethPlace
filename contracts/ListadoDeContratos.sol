@@ -15,14 +15,14 @@ contract ListadoDeContratos {
 
   /// @notice Obtiene el numero de elementos en el listado de contratos
   /// @return uint
-  function dimensionDelIndice() view public returns(uint) {
+  function dimension() view public returns(uint) {
     return contratos.length;
   }
 
   /// @notice obtiene la direccion del contrato en el indice especificado
   /// @param indice posicion del indice de contratos que se require obtener
   /// @return address
-  function obtieneDireccionDelContrato(uint indice) view public returns(address) {
+  function obtieneContrato(uint indice) view public returns(address) {
     return contratos[indice];
   }
 
@@ -34,15 +34,15 @@ contract ListadoDeContratos {
   function crearCompraventa(uint _precio) public returns(address) {
     Compraventa contrato = new Compraventa(_precio);
     address _direccionCompraventa = address(contrato);
-    agregarCompraventa(_direccionCompraventa);
+    _agregarCompraventa(_direccionCompraventa);
   }
 
   /// @notice Agregar una direccion de contrato de Compraventa al indice y retorna
   ///     su posicion.
-  /// @dev regresa la direccion nueva del contrato.
+  /// @dev regresa la direccion nueva del contratot
   /// @param _direccionCompraventa address direccion del contrato de Compraventa
   /// @return uint
-  function agregarCompraventa(address _direccionCompraventa) public returns(uint) {
+  function _agregarCompraventa(address _direccionCompraventa) private returns(uint) {
     contratos.push(_direccionCompraventa);
 
     emit ContratoListado(contratos.length - 1, _direccionCompraventa, now);

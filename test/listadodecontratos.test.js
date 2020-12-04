@@ -23,9 +23,9 @@ contract('ListadoDeContratos', accounts => {
 
     it('crear un nuevo contrato de compraventa', async function () {
 
-      const _cantidiadOriginal = BigNumber(await this.listado.dimensionDelIndice.call()).toNumber();
+      const _cantidiadOriginal = BigNumber(await this.listado.dimension.call()).toNumber();
       this.listado.crearCompraventa(BigNumber(1000000000000000000));
-      const _cantidadFinal = BigNumber(await this.listado.dimensionDelIndice.call()).toNumber();
+      const _cantidadFinal = BigNumber(await this.listado.dimension.call()).toNumber();
 
       assert.equal(_cantidiadOriginal+1, _cantidadFinal);
 
@@ -52,8 +52,8 @@ contract('ListadoDeContratos', accounts => {
       const _precio = BigNumber(1000000000000000000)
       await this.listado.crearCompraventa(BigNumber(_precio));
 
-      const _cantidadFinal = BigNumber(await this.listado.dimensionDelIndice.call()).toNumber();
-      const _direccionCompraventa = await this.Clistado.methods.obtieneDireccionDelContrato(_cantidadFinal - 1).call()
+      const _cantidadFinal = BigNumber(await this.listado.dimension.call()).toNumber();
+      const _direccionCompraventa = await this.Clistado.methods.obtieneContrato(_cantidadFinal - 1).call()
 
       const _compraventa = await new web3.eth.Contract(
         compraVentaABI,
@@ -65,9 +65,6 @@ contract('ListadoDeContratos', accounts => {
       assert.equal(_precio, _precioCompraventa);
 
     })
-
-    it.skip('no agregar un contrato que no sea de compraventa', async () => {
-    });
 
   });
 
